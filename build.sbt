@@ -242,9 +242,8 @@ lazy val mantle = (project in file("mantle"))
 //        dependsOn(deepwalk).
 //        dependsOn(exploring)
 
-lazy val exploring = project
-  .settings(name := "ProvingGround-exploring",
-            libraryDependencies += "com.lihaoyi" %% "ammonite-ops" % ammV)
+lazy val exploring = (project in file("exploring"))
+  .settings(name := "ProvingGround-exploring")
   .dependsOn(coreJVM)
   .dependsOn(mantle)
 
