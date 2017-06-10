@@ -2,7 +2,7 @@ import sbt.Project.projectToRef
 
 val scalaV = "2.12.1"
 
-val ammV = "0.9.4"
+val ammV = "0.9.9"
 
 scalaOrganization in ThisBuild := "org.typelevel"
 
@@ -34,7 +34,7 @@ lazy val commonSettings = baseSettings ++ Seq(
     resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
     libraryDependencies ++= Seq(
       // "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5",
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6",
 //      "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
       "org.typelevel" %% "spire"     % "0.14.1",
       "com.lihaoyi"   %% "fansi"     % "0.2.4",
@@ -54,7 +54,7 @@ lazy val commonSettings = baseSettings ++ Seq(
                                             "-implicits-show-all")
   )
 
-val akkaV = "2.4.17"
+val akkaV = "2.5.2"
 
 assemblyMergeStrategy in assembly := {
   case x if x.endsWith("io.netty.versions.properties") => MergeStrategy.first
@@ -69,23 +69,23 @@ lazy val jvmSettings = Seq(
     "com.typesafe.akka"      %% "akka-actor"    % akkaV,
     "com.typesafe.akka"      %% "akka-slf4j"    % akkaV,
     // "de.heikoseeberger"      %% "akka-sse"      % "2.0.0",
-    "org.scalactic" %% "scalactic" % "3.0.1",
-    "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+    "org.scalactic" %% "scalactic" % "3.0.3",
+    "org.scalatest" %% "scalatest" % "3.0.3" % "test",
 //    "ch.qos.logback" % "logback-classic" % "1.0.9",
-    "com.typesafe" % "config" % "1.3.0",
+    "com.typesafe" % "config" % "1.3.1",
     // "org.mongodb"  %% "casbah" % "3.1.1",
 //    "org.mongodb.scala" %% "mongo-scala-driver" % "1.0.0",
     "com.typesafe.akka" %% "akka-stream" % akkaV,
-    "com.typesafe.akka" %% "akka-http"   % "10.0.5",
+    "com.typesafe.akka" %% "akka-http"   % "10.0.7",
     // "com.typesafe.akka" %% "akka-http" % akkaV,
-    "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.5",
+    "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.7",
 //    "com.lihaoyi" %% "upickle" % "0.3.4",
 //    "com.lihaoyi" %% "ammonite-ops" % ammV,
 //    "com.lihaoyi" %% "ammonite-shell" % ammV,
     // "org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
-    "org.slf4j"   % "slf4j-api"    % "1.7.16",
-    "org.slf4j"   % "slf4j-simple" % "1.7.16",
-    "com.lihaoyi" %% "pprint"      % "0.5.1",
+    "org.slf4j"   % "slf4j-api"    % "1.7.25",
+    "org.slf4j"   % "slf4j-simple" % "1.7.25",
+    "com.lihaoyi" %% "pprint"      % "0.5.2",
     // Last stable release
     "org.scalanlp" %% "breeze" % "0.13.+"
     // Native libraries are not included by default. add this if you want them (as of 0.7)
@@ -119,8 +119,8 @@ lazy val nlpSettings = Seq(
   libraryDependencies ++= Seq(
     "com.lihaoyi"         % "ammonite"         % ammV % "test" cross CrossVersion.full,
     "com.lihaoyi"         %% "ammonite-ops"    % ammV,
-    "edu.stanford.nlp"    % "stanford-corenlp" % "3.6.0",
-    "edu.stanford.nlp"    % "stanford-corenlp" % "3.6.0" classifier "models",
+    "edu.stanford.nlp"    % "stanford-corenlp" % "3.7.0",
+    "edu.stanford.nlp"    % "stanford-corenlp" % "3.7.0" classifier "models",
     "com.google.protobuf" % "protobuf-java"    % "2.6.1"
   )
 )
@@ -158,8 +158,8 @@ lazy val client = project
     resolvers += "amateras-repo" at "http://amateras.sourceforge.jp/mvn/",
     resolvers += "jitpack" at "https://jitpack.io",
     libraryDependencies ++= Seq(
-      "org.scala-js"     %%% "scalajs-dom" % "0.9.1",
-      "com.lihaoyi"      %%% "scalatags"   % "0.6.3",
+      "org.scala-js"     %%% "scalajs-dom" % "0.9.2",
+      "com.lihaoyi"      %%% "scalatags"   % "0.6.5",
       "com.lihaoyi"      %%% "upickle"     % "0.4.4",
       // "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
       "com.scalawarrior" %%% "scalajs-ace" % "0.0.4" //,
@@ -192,13 +192,13 @@ lazy val server = (project in file("server"))
     // triggers scalaJSPipeline when using compile or continuous compilation
     // compile in Compile <<= (compile in Compile) dependsOn scalaJSPipeline,
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http"       % "10.0.0",
+      "com.typesafe.akka" %% "akka-http"       % "10.0.7",
       "com.vmunier"       %% "scalajs-scripts" % "1.1.0",
       "com.simianquant"   %% "ammonite-kernel" % "0.3.0",
       "de.heikoseeberger" %% "akka-sse"        % "2.0.0",
       "com.typesafe.akka" %% "akka-actor"      % akkaV,
       "com.typesafe.akka" %% "akka-stream"     % akkaV,
-      "com.github.scopt"  %% "scopt"           % "3.5.0"
+      "com.github.scopt"  %% "scopt"           % "3.6.0"
     ),
     resources in Compile += (fastOptJS in (client, Compile)).value.data
     // WebKeys.packagePrefix in Assets := "public/",
