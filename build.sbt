@@ -215,12 +215,6 @@ lazy val server = (project in file("server"))
 //   .settings(name := "ProvingGround-FunctionFinder")
 //   .dependsOn(coreJVM)
 
-lazy val mizar = project
-  .settings(commonSettings: _*)
-  .settings(jvmSettings: _*)
-  .settings(name := "Mizar-Parser",
-            libraryDependencies += "com.lihaoyi" %% "fastparse" % "0.4.3")
-
 val initCommands =
   """import provingground._, HoTT._, induction._, ammonite.ops._, translation.FansiShow._; repl.pprinter.bind(fansiPrint)"""
 
