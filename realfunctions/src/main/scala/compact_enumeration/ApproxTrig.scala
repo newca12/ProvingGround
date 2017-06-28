@@ -37,7 +37,7 @@ class ApproxTrig(N: SafeLong) {
 
   import java.math.MathContext
 
-  implicit val mc = MathContext.DECIMAL128
+  implicit val mc: java.math.MathContext = MathContext.DECIMAL128
 
   val pi = ConstantBound(Interval.point(Real.pi.toRational) + E)
 
@@ -196,7 +196,7 @@ class ApproxTrig(N: SafeLong) {
 
     import java.math.MathContext
 
-    implicit val mc = MathContext.DECIMAL128
+    implicit val mc: java.math.MathContext = MathContext.DECIMAL128
 
     import spire.math.Numeric._
 
@@ -420,7 +420,7 @@ object ApproxTrig {
   /**
     * Composition of rational bounds.
     */
-  implicit val composeApprox = new Circ[Approx] {
+  implicit val composeApprox: compact_enumeration.Circ[compact_enumeration.ApproxTrig.Approx] = new Circ[Approx] {
     def circ(x: Approx, y: Approx) =
       (I: Interval[Rational]) => y(I) flatMap ((J) => x(J))
   }

@@ -168,10 +168,10 @@ object QDI {
     <div class="finite-distribution"> {NodeSeq.fromSeq(nodeList)} </div>
   }
 
-  implicit def fdString[A](fd: FiniteDistribution[A]) =
+  implicit def fdString[A](fd: FiniteDistribution[A]): String =
     tableString(fdListList(fd))
 
-  implicit def fdListList[A](fd: FiniteDistribution[A]) = {
+  implicit def fdListList[A](fd: FiniteDistribution[A]): List[List[Any]] = {
     for (Weighted(x, p) <- fd.pmf.toList) yield List(x, p)
   }
 
@@ -183,12 +183,12 @@ object QDI {
     <div class="row">{NodeSeq.fromSeq(spans)}</div>
   }
 
-  implicit def tableDiv(xy: List[List[Any]]) = {
+  implicit def tableDiv(xy: List[List[Any]]): scala.xml.Elem = {
     val rows = xy map ((r) => row(r map (_.toString)))
     <div class="table">{NodeSeq.fromSeq(rows)}</div>
   }
 
-  implicit def tableString(xy: List[List[Any]]) = {
+  implicit def tableString(xy: List[List[Any]]): String = {
     val rows = xy map ((r) => (r map ((x) => s"""$x""")).mkString(","))
     rows.mkString(";")
   }

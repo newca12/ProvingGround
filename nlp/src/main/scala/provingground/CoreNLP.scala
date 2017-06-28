@@ -41,7 +41,7 @@ object CoreNLP {
     new StanfordCoreNLP(props)
   }
 
-  implicit lazy val pipe = newPipe
+  implicit lazy val pipe: edu.stanford.nlp.pipeline.StanfordCoreNLP = newPipe
 
   def annotatedDoc(text: String, pipe: StanfordCoreNLP) = {
     val document = new Annotation(text)

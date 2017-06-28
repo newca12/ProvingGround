@@ -11,9 +11,9 @@ import akka.stream.scaladsl.{Source => Src, _}
 import ACElem._
 
 object ACFlow {
-  implicit val system = Hub.system
+  implicit val system: akka.actor.ActorSystem = Hub.system
 
-  implicit val mat = ActorMaterializer()
+  implicit val mat: akka.stream.ActorMaterializer = ActorMaterializer()
 
 //  type Snap = SnapShot[(FiniteDistribution[AtomicMove], FiniteDistribution[Moves]), Param]
 

@@ -85,7 +85,7 @@ object FieldOps {
   /**
     * Field operations on Intervals with endpoints in a field.
     */
-  implicit def intervalFieldOps[F: Field: Order] =
+  implicit def intervalFieldOps[F: Field: Order]: compact_enumeration.FieldOps[spire.math.Interval[F]] =
     new FieldOps[Interval[F]] {
       def negate(x: spire.math.Interval[F]): spire.math.Interval[F] = -x
 
@@ -127,7 +127,7 @@ object FieldOps {
   /**
     * Field operations on optional functions A => Option[F]
     */
-  implicit def OptFieldStruct[A, F: FieldOps] = new FieldOps[A => Option[F]] {
+  implicit def OptFieldStruct[A, F: FieldOps]: compact_enumeration.FieldOps[A => Option[F]] { val fl: compact_enumeration.FieldOps[F] } = new FieldOps[A => Option[F]] {
     val fl = implicitly[FieldOps[F]]
     import FieldOpsSyms._
 
