@@ -420,10 +420,12 @@ object ApproxTrig {
   /**
     * Composition of rational bounds.
     */
-  implicit val composeApprox: compact_enumeration.Circ[compact_enumeration.ApproxTrig.Approx] = new Circ[Approx] {
-    def circ(x: Approx, y: Approx) =
-      (I: Interval[Rational]) => y(I) flatMap ((J) => x(J))
-  }
+  implicit val composeApprox
+    : compact_enumeration.Circ[compact_enumeration.ApproxTrig.Approx] =
+    new Circ[Approx] {
+      def circ(x: Approx, y: Approx) =
+        (I: Interval[Rational]) => y(I) flatMap ((J) => x(J))
+    }
 
   import FormalElemFunction.multiVar
 

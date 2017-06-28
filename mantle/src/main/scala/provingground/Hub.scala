@@ -60,7 +60,9 @@ object Hub {
 
   implicit val system: akka.actor.ActorSystem = ActorSystem("provingground")
 
-  implicit val materializer: akka.stream.ActorMaterializer = ActorMaterializer()
+  implicit val materializer: akka.stream.ActorMaterializer =
+    ActorMaterializer()
 
-  implicit val executionContext: scala.concurrent.ExecutionContextExecutor = system.dispatcher
+  implicit val executionContext: scala.concurrent.ExecutionContextExecutor =
+    system.dispatcher
 }
