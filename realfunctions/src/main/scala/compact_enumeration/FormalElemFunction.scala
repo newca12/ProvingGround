@@ -269,7 +269,8 @@ object FormalElemFunction {
 
     lazy val one: FormalElemFunction = One
 
-    implicit def N(n: Int) = natField[FormalElemFunction](n)
+    implicit def N(n: Int): compact_enumeration.FormalElemFunction =
+      natField[FormalElemFunction](n)
 
     lazy val sec = one / cos
 
@@ -284,6 +285,7 @@ object FormalElemFunction {
     lazy val w = proj(3)
   }
 
+  //Issue with explicit FieldOps[compact_enumeration.FormalElemFunction] type
   implicit val formalFieldOps = new FieldOps[FormalElemFunction] {
     def negate(x: FormalElemFunction): FormalElemFunction = Negate(x)
 
@@ -303,11 +305,13 @@ object FormalElemFunction {
       Div(x, y)
   }
 
-  implicit val formalCompose = new Circ[FormalElemFunction] {
-    def circ(x: FormalElemFunction,
-             y: FormalElemFunction): FormalElemFunction =
-      Compose(x, y)
-  }
+  implicit val formalCompose
+    : compact_enumeration.Circ[compact_enumeration.FormalElemFunction] =
+    new Circ[FormalElemFunction] {
+      def circ(x: FormalElemFunction,
+               y: FormalElemFunction): FormalElemFunction =
+        Compose(x, y)
+    }
 
   import FieldOpsSyms._
 
