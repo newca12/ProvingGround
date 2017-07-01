@@ -12,7 +12,7 @@ import scala.util._
 object ReflPickle {
   def pickle(t: Term) = t.getClass.getName
 
-  lazy val mirror = universe.runtimeMirror(getClass.getClassLoader)
+  @volatile lazy val mirror = universe.runtimeMirror(getClass.getClassLoader)
 
   def unpickle(str: String) = {
     val module = mirror.staticModule(str)

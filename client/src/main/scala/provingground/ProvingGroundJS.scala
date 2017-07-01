@@ -42,7 +42,7 @@ object ProvingGroundJS {
     JsTest.jstest()
   }
 
-  lazy val jsDiv = dom.document.getElementById("jsdiv")
+  @volatile lazy val jsDiv = dom.document.getElementById("jsdiv")
 
   def insertDiv(div: Div) =
     jsDiv.appendChild(div)

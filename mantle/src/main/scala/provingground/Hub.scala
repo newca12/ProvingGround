@@ -46,11 +46,11 @@ object Hub {
   println(cnf.getConfig("mongo-async-driver").getString("stdout-loglevel"))
 
   object ReactiveMongo {
-    lazy val driver     = new MongoDriver(Some(cnf))
-    lazy val connection = driver.connection(List("localhost"))
+    @volatile lazy val driver     = new MongoDriver(Some(cnf))
+    @volatile lazy val connection = driver.connection(List("localhost"))
 
     // Gets a reference to the database "plugin"
-    implicit lazy val db: DefaultDB = connection("provingground")
+    @volatile implicit lazy val db: DefaultDB = connection("provingground")
   }
 
   // object Casbah {

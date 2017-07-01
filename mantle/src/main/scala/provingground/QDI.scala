@@ -76,7 +76,7 @@ object QDI {
   def runForFut[A](f: A => A, init: A, duration: Long) =
     Future(runFor(f, init, duration))
 
-  lazy val runTime = java.lang.Runtime.getRuntime()
+  @volatile lazy val runTime = java.lang.Runtime.getRuntime()
 
   def freeMem = runTime.freeMemory()
 
@@ -93,7 +93,7 @@ object QDI {
     computation
   }
 
-  lazy val desktop = Desktop.getDesktop
+  @volatile lazy val desktop = Desktop.getDesktop
 
   def datafile = DateTime.now.toString.replace(":", "_") + ".dat"
 

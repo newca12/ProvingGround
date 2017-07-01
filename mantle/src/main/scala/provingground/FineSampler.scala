@@ -26,33 +26,33 @@ case class NextSample(p: FD[Term],
                       derTotalSize: Int = 1000,
                       epsilon: Double = 0.2,
                       inertia: Double = 0.3) {
-  lazy val init = ded.evolve(p)
+  @volatile lazy val init = ded.evolve(p)
 
   import Sampler._
 
-  lazy val nextSamp = sample(init, size)
+  @volatile lazy val nextSamp = sample(init, size)
 
-  lazy val nextFD = toFD(nextSamp) * (1.0 - inertia) ++ (p * inertia)
+  @volatile lazy val nextFD = toFD(nextSamp) * (1.0 - inertia) ++ (p * inertia)
 
-  lazy val nextTypSamp = sample(ded.evolveTyp(p), size)
+  @volatile lazy val nextTypSamp = sample(ded.evolveTyp(p), size)
 
-  lazy val nextTypFD = toFD(nextTypSamp).map {
+  @volatile lazy val nextTypFD = toFD(nextTypSamp).map {
     case tp: Typ[u] => tp: Typ[Term]
   }
 
-  lazy val thmFeedback = TheoremFeedback(nextFD, nextTypFD, vars)
+  @volatile lazy val thmFeedback = TheoremFeedback(nextFD, nextTypFD, vars)
 
   def derivativePD(tang: FD[Term]): PD[Term] = ded.Devolve(nextFD, tang)
 
   /**
     * Sample sizes for tangents at atomic vectors
     */
-  lazy val derSamplesSizes = sample(nextFD, derTotalSize)
+  @volatile lazy val derSamplesSizes = sample(nextFD, derTotalSize)
 
   /**
     * Finite distributions as derivatives at nextFD of the atomic tangent vectors with chosen sample sizes.
     */
-  lazy val derFDs =
+  @volatile lazy val derFDs =
     derSamplesSizes map {
       case (x, n) =>
         val tang = FD.unif(x) //tangent vecror, atom at `x`
@@ -66,7 +66,7 @@ case class NextSample(p: FD[Term],
         (x, (toFD(samp), toFD(Dsamp)))
     }
 
-  lazy val feedBacks =
+  @volatile lazy val feedBacks =
     derFDs map {
       case (x, (tfd, tpfd)) =>
         x -> thmFeedback.feedbackTermDist(tfd, tpfd)
@@ -99,9 +99,9 @@ case class NextSample(p: FD[Term],
     FD(pmf).flatten.normalized()
   }
 
-  lazy val succFD = shiftedFD(epsilon)
+  @volatile lazy val succFD = shiftedFD(epsilon)
 
-  lazy val succ = this.copy(p = succFD)
+  @volatile lazy val succ = this.copy(p = succFD)
 
   def iter = Iterator.iterate(this)(_.succ)
 

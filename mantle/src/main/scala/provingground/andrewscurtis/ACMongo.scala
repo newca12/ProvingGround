@@ -24,19 +24,20 @@ import scala.concurrent._
 import MoveGenerator._
 
 object ACMongo extends ACWriter {
-  lazy val driver = new MongoDriver()
+  @volatile lazy val driver = new MongoDriver()
 
-  lazy val connection = driver.connection(List("localhost"))
+  @volatile lazy val connection = driver.connection(List("localhost"))
 
   /**
     * The database for andrews-curtis runs.
     */
-  implicit lazy val db: DefaultDB = connection("provingground-andrewscurtis")
+  @volatile implicit lazy val db: DefaultDB = connection(
+    "provingground-andrewscurtis")
 
   /**
     * Collection for andrews-curtis elements - elements have all the info.
     */
-  lazy val elemsDB = db("elements")
+  @volatile lazy val elemsDB = db("elements")
 
   val elemsInd = elemsDB.indexesManager
 
@@ -48,7 +49,7 @@ object ACMongo extends ACWriter {
   /**
     * collections of theorems, with total weights.
     */
-  lazy val thmsDB = db("theorems")
+  @volatile lazy val thmsDB = db("theorems")
 
   val thmsInd = thmsDB.indexesManager
 
@@ -61,12 +62,12 @@ object ACMongo extends ACWriter {
   /**
     * collection for actor data: names, loops run and anything else stored.
     */
-  lazy val actorsDB = db("actors")
+  @volatile lazy val actorsDB = db("actors")
 
   /**
     * collection for weights of moves.
     */
-  lazy val moveWeightsDB = db("moveweights")
+  @volatile lazy val moveWeightsDB = db("moveweights")
 
   /**
     * implicit writer for AC elements

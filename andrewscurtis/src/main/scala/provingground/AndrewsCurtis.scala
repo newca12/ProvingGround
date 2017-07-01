@@ -226,15 +226,15 @@ object AndrewsCurtis {
 
     val foot = head
 
-    lazy val moveStack = List()
+    @volatile lazy val moveStack = List()
   }
 
   case class RecChain(start: Chain, move: Move) extends Chain {
     val head = move(start.head)
 
-    lazy val foot = start.foot
+    @volatile lazy val foot = start.foot
 
-    lazy val moveStack = move :: start.moveStack
+    @volatile lazy val moveStack = move :: start.moveStack
     /*
      * start.prob = probability of reaching start and not continuing.
      * multiply by the probability of continuing from start and making the given move.

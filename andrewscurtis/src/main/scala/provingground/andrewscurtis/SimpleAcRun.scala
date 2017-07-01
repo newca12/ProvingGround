@@ -177,22 +177,22 @@ object SimpleAcRun {
     *  create an instance of this and import for easy use.
     */
   class PathView(implicit dbread: Future[List[Path]]) {
-    lazy val paths = scala.concurrent.Await
+    @volatile lazy val paths = scala.concurrent.Await
       .result(dbread, scala.concurrent.duration.Duration.Inf)
 
-    lazy val finalproofs = for (p <- paths) yield (p.current.fdV)
+    @volatile lazy val finalproofs = for (p <- paths) yield (p.current.fdV)
 
-    lazy val finalthms = for (p <- paths) yield (p.current.fdP)
+    @volatile lazy val finalthms = for (p <- paths) yield (p.current.fdP)
 
-    lazy val finalMs = for (p <- paths) yield (p.current.fdM)
+    @volatile lazy val finalMs = for (p <- paths) yield (p.current.fdM)
 
-    lazy val Mdist = vBigSum(finalMs).flatten.normalized()
+    @volatile lazy val Mdist = vBigSum(finalMs).flatten.normalized()
 
-    lazy val proofs = vBigSum(finalproofs).flatten.normalized()
+    @volatile lazy val proofs = vBigSum(finalproofs).flatten.normalized()
 
-    lazy val thms = vBigSum(finalthms).flatten.normalized()
+    @volatile lazy val thms = vBigSum(finalthms).flatten.normalized()
 
-    lazy val thmsView = thms.entropyView
+    @volatile lazy val thmsView = thms.entropyView
 
     def proofsOf(thm: Presentation) =
       proofs filter ((pf: Moves) => actOnTriv(thm.rank)(pf) == thm)

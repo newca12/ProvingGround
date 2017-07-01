@@ -41,7 +41,7 @@ class ApproxTrig(N: SafeLong) {
 
   val pi = ConstantBound(Interval.point(Real.pi.toRational) + E)
 
-  lazy val J = Interval.closed(Rational(0), width)
+  @volatile lazy val J = Interval.closed(Rational(0), width)
 
   /**
     * returns bound on a positive interval,
@@ -100,7 +100,7 @@ class ApproxTrig(N: SafeLong) {
     * stream of bounds on the exponential.
     * At n, this is an interval containing e^(n/ N)
     */
-  lazy val expStream: Stream[Interval[Rational]] =
+  @volatile lazy val expStream: Stream[Interval[Rational]] =
     Nat map
       ((n: SafeLong) =>
         if (n == 0) Interval.point(Rational(1))
@@ -178,18 +178,18 @@ class ApproxTrig(N: SafeLong) {
     */
   case class TrigBound(b: Interval[Rational], c: Interval[Rational]) {
 
-    lazy val lftBound = -c / r"2" // bound based on f" + f at left endpoint.
+    @volatile lazy val lftBound = -c / r"2" // bound based on f" + f at left endpoint.
 
-    lazy val rghtBound =
+    @volatile lazy val rghtBound =
       -(c + b * width) / (2 + width * width) // bound based on f" + f at right endpoint.
 
-    lazy val endsBound =
+    @volatile lazy val endsBound =
       lftBound union rghtBound // bound based on f" + f at both endpoints.
 
-    lazy val derImage =
+    @volatile lazy val derImage =
       b union (b + (endsBound * width * 2)) // bound on image of derivative
 
-    lazy val derSignChange =
+    @volatile lazy val derSignChange =
       derImage.crossesZero // check if derivative can a priori cross 0
 
 //    implicit val appr = new ApproximationContext(width)
@@ -200,27 +200,28 @@ class ApproxTrig(N: SafeLong) {
 
     import spire.math.Numeric._
 
-    lazy val b2c2 =
+    @volatile lazy val b2c2 =
       (b.pow(2) * 2 + c.pow(2)).sqrt + Interval.closed(-width, width)
 
-    lazy val discriminantNonNegative =
+    @volatile lazy val discriminantNonNegative =
       ((-c - b2c2) union (-c + b2c2)) / (Rational(4)) // interval outside which discriminant is non-negative
 
-    lazy val a =
+    @volatile lazy val a =
       if (derSignChange && (endsBound intersects discriminantNonNegative))
         endsBound union discriminantNonNegative
       else endsBound
 
-    lazy val atRightEnd = (a * width * width) + (b * width) + c
+    @volatile lazy val atRightEnd = (a * width * width) + (b * width) + c
 
-    lazy val intervalImage = (a * J.pow(2)) + (b * J) + c
+    @volatile lazy val intervalImage = (a * J.pow(2)) + (b * J) + c
   }
 
   /**
     * on the interval ((n - 1)/ N, n/N) if n>0 , (0, 0) otherwise,
     * pair giving bounds for sin on image at right end-point and on the whole interval
     */
-  lazy val sinStream: Stream[(Interval[Rational], Interval[Rational])] =
+  @volatile lazy val sinStream
+    : Stream[(Interval[Rational], Interval[Rational])] =
     Nat map
       ((n: SafeLong) =>
         if (n == 0)
@@ -236,7 +237,8 @@ class ApproxTrig(N: SafeLong) {
     * on the interval ((n - 1)/ N, n/N) if n>0 , (0, 0) otherwise,
     * pair giving bounds for cos on image at right end-point and on the whole interval
     */
-  lazy val cosStream: Stream[(Interval[Rational], Interval[Rational])] =
+  @volatile lazy val cosStream
+    : Stream[(Interval[Rational], Interval[Rational])] =
     Nat map
       ((n: SafeLong) =>
         if (n == 0)

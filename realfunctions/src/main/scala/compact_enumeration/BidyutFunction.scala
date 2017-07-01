@@ -157,7 +157,7 @@ the second term: Perim(P_1)
   /*
    * the function to check is positive.
    */
-  lazy val func: FormalElemFunction = term2 + term3 - term1
+  @volatile lazy val func: FormalElemFunction = term2 + term3 - term1
 
   def evalRat(N: Int, depth: Int) = cube.splitBound(func, N, depth)
 

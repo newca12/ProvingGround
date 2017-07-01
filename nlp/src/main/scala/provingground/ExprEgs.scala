@@ -59,12 +59,12 @@ object ExprEgs {
 
   def parseT(s: String) = mathExprTree(texParse(s))
 
-  lazy val parsed =
+  @volatile lazy val parsed =
     assertions
       .map((s) => s -> mathExpr(texParse(s)))
       .filter(!_._2.isEmpty)
       .toMap
 
-  lazy val exprs =
+  @volatile lazy val exprs =
     assertions.map((s) => s -> mathExprFormal()(texParse(s))).toMap
 }

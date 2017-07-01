@@ -20,9 +20,9 @@ object StanfordParser {
   val lp = LexicalizedParser.loadModel(
     "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz")
 
-  lazy val tlp = new PennTreebankLanguagePack
+  @volatile lazy val tlp = new PennTreebankLanguagePack
 
-  lazy val gsf = tlp.grammaticalStructureFactory
+  @volatile lazy val gsf = tlp.grammaticalStructureFactory
 
   val tagger = new MaxentTagger(
     "edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger")
@@ -74,27 +74,29 @@ object StanfordParser {
     // .replace("which", "where it") // useful for contituency parsing
     // .replace("that", "where it")
 
-    lazy val texMap = (texInline(raw).zipWithIndex map {
+    @volatile lazy val texMap = (texInline(raw).zipWithIndex map {
       case (w, n) => (s"TeXInline$n", w)
     }).toMap
 
-    lazy val deTeXed = (texMap :\ raw) { case ((l, w), s) => s.replace(w, l) }
+    @volatile lazy val deTeXed = (texMap :\ raw) {
+      case ((l, w), s) => s.replace(w, l)
+    }
 
-    lazy val deTeXWords = words(deTeXed)
+    @volatile lazy val deTeXWords = words(deTeXed)
 
-    lazy val deTeXTagged = tagger(deTeXWords.asJava)
+    @volatile lazy val deTeXTagged = tagger(deTeXWords.asJava)
 
     def reTagged(tw: TaggedWord) =
       wordTags.foldRight(tw) { case ((w, tag), t) => reTag(w, tag)(t) }
 
-    lazy val tagged =
+    @volatile lazy val tagged =
       deTeXTagged.asScala map { (tw) =>
         if (tw.word.startsWith("TeXInline"))
           new TaggedWord(texMap(tw.word), "NNP")
         else reTagged(tw)
       }
 
-    lazy val mergeSubsTagged =
+    @volatile lazy val mergeSubsTagged =
       mweSubs.foldRight(tagged.toVector) {
         case ((ws, tw), t) => mergeSubs(ws, tw)(t)
       }
@@ -102,22 +104,22 @@ object StanfordParser {
     // lazy val mergeTagged =
     //     mweTags.foldRight(tagged.toVector){case ((ws, tag), t) => mergeTag(ws, tag)(t)}
 
-    lazy val parsed = lp(mergeSubsTagged.asJava)
+    @volatile lazy val parsed = lp(mergeSubsTagged.asJava)
 
-    lazy val gs = gsf.newGrammaticalStructure(parsed)
+    @volatile lazy val gs = gsf.newGrammaticalStructure(parsed)
 
-    lazy val tdl = gs.typedDependenciesCCprocessed
+    @volatile lazy val tdl = gs.typedDependenciesCCprocessed
 
     import translation.NlpProse._
 
     def token(w: IndexedWord) = Token(w.word, w.index)
 
-    lazy val typedDeps =
+    @volatile lazy val typedDeps =
       tdl.asScala.map { (x) =>
         DepRel(token(x.gov), token(x.dep), x.reln.toString)
       }
 
-    lazy val proseTree = ProseTree(typedDeps.toList)
+    @volatile lazy val proseTree = ProseTree(typedDeps.toList)
   }
 
   val baseWordTags =

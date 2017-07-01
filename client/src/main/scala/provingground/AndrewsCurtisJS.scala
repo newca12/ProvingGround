@@ -92,17 +92,18 @@ object AndrewsCurtisJS {
           List[(String, Double)],
           List[(String, Double)])](pickled)
 
-  lazy val dashboard = div(`class` := "dashboard")(h3("Dashboard"),
-                                                   div(b("rank: "), rankBox),
-                                                   p(""),
-                                                   div(b("steps: "), stepsBox),
-                                                   p(""),
-                                                   div(evolveButton)).render
+  @volatile lazy val dashboard = div(`class` := "dashboard")(
+    h3("Dashboard"),
+    div(b("rank: "), rankBox),
+    p(""),
+    div(b("steps: "), stepsBox),
+    p(""),
+    div(evolveButton)).render
 
-  lazy val output =
+  @volatile lazy val output =
     div(`class` := "output")(h3("Ouput"), debugDiv, fdOutDiv).render
 
-  lazy val fdOutDiv = div.render
+  @volatile lazy val fdOutDiv = div.render
 
   def fdOut(d: dom.html.Div) = {
     fdOutDiv.innerHTML = ""

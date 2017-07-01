@@ -265,24 +265,24 @@ object FormalElemFunction {
 
     val proj: Int => FormalElemFunction = (i: Int) => Proj(i)
 
-    lazy val tan = sin / cos
+    @volatile lazy val tan = sin / cos
 
-    lazy val one: FormalElemFunction = One
+    @volatile lazy val one: FormalElemFunction = One
 
     implicit def N(n: Int): compact_enumeration.FormalElemFunction =
       natField[FormalElemFunction](n)
 
-    lazy val sec = one / cos
+    @volatile lazy val sec = one / cos
 
-    lazy val cosec = one / sin
+    @volatile lazy val cosec = one / sin
 
-    lazy val x = proj(0)
+    @volatile lazy val x = proj(0)
 
-    lazy val y = proj(1)
+    @volatile lazy val y = proj(1)
 
-    lazy val z = proj(2)
+    @volatile lazy val z = proj(2)
 
-    lazy val w = proj(3)
+    @volatile lazy val w = proj(3)
   }
 
   //Issue with explicit FieldOps[compact_enumeration.FormalElemFunction] type

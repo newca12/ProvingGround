@@ -255,7 +255,8 @@ object WebServer {
     }
   }
 
-  lazy val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
+  @volatile lazy val bindingFuture =
+    Http().bindAndHandle(route, "localhost", 8080)
 
   def bind = bindingFuture.foreach((_) => ())
 

@@ -259,27 +259,28 @@ class TermSampler(d: BasicDeducer) {
                         sc: Double,
                         epsilon: Double,
                         inertia: Double) {
-    lazy val init = d.hFunc(sc)(p)
+    @volatile lazy val init = d.hFunc(sc)(p)
 
-    lazy val nextSamp = sample(init, size)
+    @volatile lazy val nextSamp = sample(init, size)
 
-    lazy val nextFD = toFD(nextSamp) * (1.0 - inertia) ++ (p * inertia)
+    @volatile lazy val nextFD = toFD(nextSamp) * (1.0 - inertia) ++ (p * inertia)
 
     // def plotEntropies = plotEnts(nextFD)
 
-    lazy val thmEntropies = ThmEntropies(nextFD, d.vars, d.lambdaWeight)
+    @volatile lazy val thmEntropies =
+      ThmEntropies(nextFD, d.vars, d.lambdaWeight)
 
     def derivativePD(tang: PD[Term]): PD[Term] = d.hDerFunc(sc)(nextFD)(tang)
 
     /**
       * Sample sizes for tangents at atomic vectors
       */
-    lazy val derSamplesSizes = sample(nextFD, derTotalSize)
+    @volatile lazy val derSamplesSizes = sample(nextFD, derTotalSize)
 
     /**
       * Finite distributions as derivatives at nextFD of the atomic tangent vectors with chosen sample sizes.
       */
-    lazy val derFDs =
+    @volatile lazy val derFDs =
       derSamplesSizes map {
         case (x, n) =>
           val tang = FD.unif(x) //tangent vecror, atom at `x`
@@ -289,7 +290,7 @@ class TermSampler(d: BasicDeducer) {
           x -> toFD(samp)
       }
 
-    lazy val feedBacks =
+    @volatile lazy val feedBacks =
       derFDs map {
         case (x, tfd) =>
           x -> thmEntropies.feedbackTermDist(tfd)
@@ -322,8 +323,8 @@ class TermSampler(d: BasicDeducer) {
       FD(pmf).flatten.normalized()
     }
 
-    lazy val succFD = shiftedFD(derTotalSize, epsilon)
+    @volatile lazy val succFD = shiftedFD(derTotalSize, epsilon)
 
-    lazy val succ = this.copy(p = succFD)
+    @volatile lazy val succ = this.copy(p = succFD)
   }
 }

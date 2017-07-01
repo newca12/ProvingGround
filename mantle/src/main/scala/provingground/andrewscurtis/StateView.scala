@@ -15,13 +15,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class StateView(name: String,
                 elems: Vector[ACElem],
                 fdM: FiniteDistribution[AtomicMove]) {
-  lazy val fdV = FiniteDistribution(
+  @volatile lazy val fdV = FiniteDistribution(
     elems map ((x) => Weighted(x.moves, x.weight))).flatten.normalized()
 
-  lazy val fdP = FiniteDistribution(
+  @volatile lazy val fdP = FiniteDistribution(
     elems map ((x) => Weighted(x.pres, x.weight))).flatten.normalized()
 
-  lazy val proofElems = elems groupBy (_.pres)
+  @volatile lazy val proofElems = elems groupBy (_.pres)
 
   def proofs(thm: Presentation) =
     proofElems.getOrElse(thm, Vector()) map (_.moves)
@@ -31,18 +31,18 @@ class StateView(name: String,
     (1.0 /: ps)(_ * _)
   }
 
-  lazy val thmWeights =
+  @volatile lazy val thmWeights =
     proofElems mapValues
       ((elemVec) => (elemVec map ((elem) => elem.weight)).sum)
 
-  lazy val proofWeightMap =
+  @volatile lazy val proofWeightMap =
     proofElems mapValues
       ((elemVec) => (elemVec map ((elem) => proofWeight(elem.moves))).sum)
 
   def totalProofWeight(thm: Presentation) =
     proofWeightMap.getOrElse(thm, 0.0)
 
-  lazy val hardnessMap = for ((thm, p) <- thmWeights)
+  @volatile lazy val hardnessMap = for ((thm, p) <- thmWeights)
     yield (thm, math.log(p) / math.log(proofWeightMap(thm)))
 
   def hardness(thm: Presentation) =
