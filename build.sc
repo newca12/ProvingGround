@@ -263,6 +263,9 @@ object mantle extends CommonModule with SbtModule with PGPublish {
   object test extends Tests {
     override def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.1.0")
     def testFrameworks   = Seq("org.scalatest.tools.Framework")
+    def testOne(args: String*) = T.command {
+      super.runMain("org.scalatest.run", args: _*)
+    }
   }
 
 }
@@ -343,6 +346,9 @@ object andrewscurtis extends JvmModule with SbtModule {
   object test extends Tests {
     override def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.1.0")
     def testFrameworks   = Seq("org.scalatest.tools.Framework")
+    def testOne(args: String*) = T.command {
+      super.runMain("org.scalatest.run", args: _*)
+    }
   }
 }
 
