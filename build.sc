@@ -6,6 +6,8 @@ import define.{Sources, Task}
 // import ammonite.ops._
 import os._
 import $ivy.`org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r`
+import $ivy.`com.lihaoyi::mill-contrib-scoverage:$MILL_VERSION`
+import mill.contrib.scoverage.ScoverageModule
 
 val scalaV = "2.13.3"
 
@@ -226,8 +228,9 @@ def gitlog() = {
   )
 }
 
-object mantle extends CommonModule with SbtModule with PGPublish {
+object mantle extends CommonModule with SbtModule with ScoverageModule with PGPublish {
   override def moduleDeps = Seq(core.jvm, trepplein, leanlib.jvm)
+  override def scoverageVersion = "1.4.2"
 
   // def artifactName = "provingground-mantle"
 
@@ -260,7 +263,7 @@ object mantle extends CommonModule with SbtModule with PGPublish {
 
   override def mainClass = Some("provingground.interface.MantleCask")
 
-  object test extends Tests {
+  object test extends Tests with ScoverageTests {
     override def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.1.0")
     def testFrameworks   = Seq("org.scalatest.tools.Framework")
   }
@@ -337,10 +340,11 @@ object exploring extends JvmModule {
 
 object realfunctions extends JvmModule
 
-object andrewscurtis extends JvmModule with SbtModule {
+object andrewscurtis extends JvmModule with SbtModule with ScoverageModule {
   override def moduleDeps = Seq(core.jvm, mantle, crust)
+  override def scoverageVersion = "1.4.2"
 
-  object test extends Tests {
+  object test extends Tests with ScoverageTests {
     override def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.1.0")
     def testFrameworks   = Seq("org.scalatest.tools.Framework")
   }
