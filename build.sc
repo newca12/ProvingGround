@@ -7,7 +7,9 @@ import define.{Sources, Task}
 import os._
 import $ivy.`org.eclipse.jgit:org.eclipse.jgit:5.6.0.201912101111-r`
 import $ivy.`com.lihaoyi::mill-contrib-scoverage:$MILL_VERSION`
+import $ivy.`org.scoverage::scalac-scoverage-runtime:1.4.2`
 import mill.contrib.scoverage.ScoverageModule
+import mill.contrib.scoverage.ScoverageReport
 
 val scalaV = "2.13.3"
 
@@ -151,7 +153,12 @@ trait PGPublish extends PublishModule {
   )
 }
 
-object core extends Module {
+object scoverage extends ScoverageReport {
+  def scalaVersion = scalaV
+  def scoverageVersion = "1.4.2"
+}
+
+object core extends Module  {
 
   object jvm extends CommonModule with SbtModule with PGPublish {
 
