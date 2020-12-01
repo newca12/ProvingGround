@@ -22,7 +22,7 @@ jobs:
         ./mill all __.test
         ./mill jvmRoot.docs
         ./mill mantle.runMain "provingground.interface.Site"
-        ./mill _.scoverage.xmlRepor
+        ./mill _.scoverage.xmlReport
     - name: Upload scoverage reports to codecov.io
       uses: codecov/codecov-action@v1
       with:
